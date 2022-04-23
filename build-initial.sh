@@ -11,6 +11,8 @@ SPDK_VERSION_SUFFIX="$(cat spdk/include/spdk/version.h | grep "#define SPDK_VERS
 SPDK_VERSION_HASH="$(cd spdk && git rev-parse --short HEAD)"
 SPDK_VERSION_UNIXTIME="$(cd spdk && git log -1 --format=%at)"
 
+echo "GITHUB_ENV: $GITHUB_ENV"
+
 echo "SPDK_VERSION_MAJOR=$SPDK_VERSION_MAJOR" >> $GITHUB_ENV
 echo "SPDK_VERSION_MINOR=$SPDK_VERSION_MINOR" >> $GITHUB_ENV
 echo "SPDK_VERSION_PATCH=$SPDK_VERSION_PATCH" >> $GITHUB_ENV

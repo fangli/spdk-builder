@@ -15,17 +15,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: "Run pre-build script"
-        shell: bash
         run: |
           sudo ./build-initial.sh
 
       - name: "Build nvmf-tgt"
-        shell: bash
         run: |
           sudo ./build.sh
         
       - name: "Build deb package"
-        shell: bash
         run: |
           sudo ./build-deb.sh
 
