@@ -28,11 +28,11 @@ jobs:
 
       - name: "Build nvmf-tgt"
         run: |
-          sudo ./build.sh
+          sudo ./build.sh "$GITHUB_ENV"
         
       - name: "Build deb package"
         run: |
-          sudo ./build-deb.sh
+          sudo ./build-deb.sh "$GITHUB_ENV"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
