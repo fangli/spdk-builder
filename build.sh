@@ -2,7 +2,7 @@
 
 cd spdk
 
-git apply ../patch.diff
+git apply --ignore-space-change --ignore-whitespace ../patch.diff
 
 ./scripts/pkgdep.sh --rdma
 ./configure --with-rdma --enable-lto --disable-tests --disable-unit-tests --disable-examples
