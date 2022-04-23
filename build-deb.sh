@@ -23,4 +23,4 @@ find ./usr -type f | xargs -I{} md5sum  {} > DEBIAN/md5sums
 
 cd ../
 
-dpkg -b deb-package nvmf-x86_64-${SPDK_VERSION_MAJOR}.${SPDK_VERSION_MINOR}.${SPDK_VERSION_PATCH}_${SPDK_VERSION_UNIXTIME}v${SPDK_VERSION_HASH}.deb
+dpkg -b deb-package nvmf-x86_64-${SPDK_VERSION_MAJOR}.${SPDK_VERSION_MINOR}.${SPDK_VERSION_PATCH}-${SPDK_VERSION_UNIXTIME}v${SPDK_VERSION_HASH}.deb

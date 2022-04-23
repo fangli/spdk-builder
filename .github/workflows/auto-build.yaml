@@ -29,8 +29,8 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          title: "Release NVMe-oF Target ${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}_${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
-          automatic_release_tag: "v${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}_${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
+          title: "Release NVMe-oF Target ${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}-${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
+          automatic_release_tag: "v${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}-${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
           prerelease: false
           files: |
             *.deb
