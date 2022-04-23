@@ -14,18 +14,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: "Build"
+      - name: "Run pre-build script"
+        shell: bash
+        run: |
+          sudo ./build-initial.sh
+
+      - name: "Build nvmf-tgt"
         shell: bash
         run: |
           sudo ./build.sh
+        
+      - name: "Build deb package"
+        shell: bash
+        run: |
+          sudo ./build-deb.sh
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          title: "auto-build"
-          automatic_release_tag: "v1.0"
+          title: "Release NVMe-oF Target ${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}_${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
+          automatic_release_tag: "v${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}_${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
           prerelease: false
           files: |
-            spdk/LICENSE
-            spdk/build/bin/nvmf_tgt
+            *.deb
             

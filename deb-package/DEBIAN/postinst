@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+if [[ -f "/etc/default/nvmf" ]]; then
+    echo "/etc/default/nvmf exists, skipping"
+else
+    echo "Creating /etc/default/nvmf..."
+    echo 'ARGS="-m [0,1] -c /etc/nvmf.json"' > /etc/default/nvmf
+    echo 'LOGFILE=/var/log/nvmf.log' >> /etc/default/nvmf
+fi
+
+if [[ -f "/etc/nvmf.json" ]]; then
+    echo "/etc/nvmf.json exists, skipping"
+else
+    echo "Creating /etc/nvmf.json..."
+    echo '{}' > /etc/nvmf.json
+fi
+
+systemctl --global enable nvmf.service
+
+echo "Use 'systemctl start nvmf' to start nvmf."

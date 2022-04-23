@@ -1,0 +1,10 @@
+Package: nvmf
+Version: SPDK_VERSION_MAJOR.SPDK_VERSION_MINOR.SPDK_VERSION_PATCH_SPDK_VERSION_UNIXTIMEvSPDK_VERSION_HASH
+Architecture: amd64
+Maintainer: Felix <surivlee@gmail.com>
+Installed-Size: 10000
+Depends: rdma-core
+Section: utils
+Priority: optional
+Homepage: https://github.com/spdk/spdk
+Description: SPDK NVMe-OF Target Service

@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+systemctl --global disable nvmf.service
+systemctl stop nvmf.service
