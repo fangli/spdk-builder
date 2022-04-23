@@ -9,7 +9,9 @@ echo "SPDK_VERSION_UNIXTIME: $SPDK_VERSION_UNIXTIME"
 
 apt install -y dpkg
 
+mkdir -p deb-package/usr/local/bin
 mv spdk/build/bin/nvmf_tgt deb-package/usr/local/bin/nvmf
+
 cd deb-package/
 
 sed -i 's/SPDK_VERSION_MAJOR/'$SPDK_VERSION_MAJOR'/g' DEBIAN/control

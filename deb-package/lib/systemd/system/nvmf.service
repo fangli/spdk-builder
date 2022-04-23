@@ -4,7 +4,7 @@ After=network.target auditd.service
 
 [Service]
 EnvironmentFile=-/etc/default/nvmf
-ExecStart=/usr/local/bin/nvmf $ARGS >> $LOGFILE 2>&1
+ExecStart=/usr/local/bin/nvmf $ARGS
 KillMode=process
 Restart=on-failure
 
