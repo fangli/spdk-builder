@@ -6,6 +6,14 @@ on:
     tags:
       - "v*"
 
+env:
+  SPDK_VERSION_MAJOR: ""
+  SPDK_VERSION_MINOR: ""
+  SPDK_VERSION_PATCH: ""
+  SPDK_VERSION_SUFFIX: ""
+  SPDK_VERSION_HASH: ""
+  SPDK_VERSION_UNIXTIME: ""
+
 jobs:
   tagged-release:
     name: "Tagged Release"
