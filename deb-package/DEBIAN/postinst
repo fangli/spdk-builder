@@ -15,7 +15,7 @@ else
     echo '{}' > /etc/nvmf.json
 fi
 
-systemctl --global daemon-reload
-systemctl --global enable nvmf.service
+systemctl daemon-reload
+systemctl enable nvmf.service
 
 echo "Use 'systemctl start nvmf' to start nvmf."
