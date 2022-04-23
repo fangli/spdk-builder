@@ -1,0 +1,26 @@
+---
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-20.04"
+
+    steps:
+      - name: "Build"
+        run: |
+          sudo ./build.sh
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            spdk/LICENSE
+            spdk/build/bin/nvmf_tgt
+            
