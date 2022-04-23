@@ -24,15 +24,15 @@ jobs:
 
       - name: "Run pre-build script"
         run: |
-          sudo ./build-initial.sh "$GITHUB_ENV"
+          sudo -E ./build-initial.sh "$GITHUB_ENV"
 
       - name: "Build nvmf-tgt"
         run: |
-          sudo ./build.sh "$GITHUB_ENV"
+          sudo -E ./build.sh "$GITHUB_ENV"
         
       - name: "Build deb package"
         run: |
-          sudo ./build-deb.sh "$GITHUB_ENV"
+          sudo -E ./build-deb.sh "$GITHUB_ENV"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
