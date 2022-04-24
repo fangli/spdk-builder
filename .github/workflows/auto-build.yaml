@@ -12,6 +12,11 @@ jobs:
     runs-on: "ubuntu-22.04"
 
     steps:
+      - name: "Reset permissions"
+        run: |
+          export CURRENT_USER="`whoami`"
+          sudo -E chown -R $CURRENT_USER:$CURRENT_USER .
+    
       - uses: actions/checkout@v2
 
       - name: "Run pre-build script"
