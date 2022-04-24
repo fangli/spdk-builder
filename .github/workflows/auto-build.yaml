@@ -16,6 +16,8 @@ jobs:
         run: |
           export CURRENT_USER="`whoami`"
           sudo -E chown -R $CURRENT_USER:$CURRENT_USER .
+          sudo rm -rf *
+          sudo rm -rf .git*
     
       - uses: actions/checkout@v2
 
