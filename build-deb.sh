@@ -10,7 +10,11 @@ echo "SPDK_VERSION_UNIXTIME: $SPDK_VERSION_UNIXTIME"
 apt install -y dpkg
 
 mkdir -p deb-package/usr/local/bin
+mkdir -p deb-package/usr/local/lib/nvmfcli/scripts
+
 mv spdk/build/bin/nvmf_tgt deb-package/usr/local/bin/nvmf
+cp -rf spdk/scripts/rpc.py deb-package/usr/local/lib/nvmfcli/scripts/
+cp -rf spdk/python deb-package/usr/local/lib/nvmfcli/
 
 cd deb-package/
 
