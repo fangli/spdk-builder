@@ -1,1 +1,3 @@
-#!/bin/bash
+#!/bin/bash -e
+
+rm -rf /usr/local/lib/nvmfcli || true
