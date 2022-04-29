@@ -7,7 +7,7 @@ echo "SPDK_VERSION_SUFFIX: $SPDK_VERSION_SUFFIX"
 echo "SPDK_VERSION_HASH: $SPDK_VERSION_HASH"
 echo "SPDK_VERSION_UNIXTIME: $SPDK_VERSION_UNIXTIME"
 
-apt install -y dpkg
+sudo apt install -y dpkg
 
 mkdir -p deb-package/usr/local/bin
 mkdir -p deb-package/usr/local/lib/nvmfcli/scripts
@@ -29,4 +29,5 @@ find ./usr -type f | xargs -I{} md5sum  {} > DEBIAN/md5sums
 
 cd ../
 
-dpkg -b deb-package nvmf-x86_64-${SPDK_VERSION_MAJOR}.${SPDK_VERSION_MINOR}.${SPDK_VERSION_PATCH}-${SPDK_VERSION_UNIXTIME}v${SPDK_VERSION_HASH}.deb
+sudo chown -R root:root deb-package
+sudo -E dpkg -b deb-package nvmf-x86_64-${SPDK_VERSION_MAJOR}.${SPDK_VERSION_MINOR}.${SPDK_VERSION_PATCH}-${SPDK_VERSION_UNIXTIME}v${SPDK_VERSION_HASH}.deb

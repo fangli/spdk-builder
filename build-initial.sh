@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
-apt update
-apt install -y libibverbs-dev rdma-core libfdt-dev libexecs-dev libarchive-dev libbsd-dev libjansson-dev libpcap-dev
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install -y libibverbs-dev rdma-core libfdt-dev libexecs-dev libarchive-dev libbsd-dev libjansson-dev libpcap-dev
+
 git submodule update --init --recursive
 
 SPDK_VERSION_MAJOR="$(cat spdk/include/spdk/version.h | grep "#define SPDK_VERSION_MAJOR	" | awk '{print $3}')"
