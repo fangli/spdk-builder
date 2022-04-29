@@ -15,24 +15,23 @@ jobs:
       - name: "Reset permissions"
         run: |
           export CURRENT_USER="`whoami`"
-          sudo -E chown -R $CURRENT_USER:$CURRENT_USER .
           sudo rm -rf *
           sudo rm -rf .git*
-          sudo -E git config --global --add safe.directory "$(pwd)"
+          sudo -E chown -R $CURRENT_USER:$CURRENT_USER .
     
       - uses: actions/checkout@v2
 
       - name: "Run pre-build script"
         run: |
-          sudo -E ./build-initial.sh
+          ./build-initial.sh
 
       - name: "Build nvmf-tgt"
         run: |
-          sudo -E ./build.sh
+          ./build.sh
         
       - name: "Build deb package"
         run: |
-          sudo -E ./build-deb.sh
+          ./build-deb.sh
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
