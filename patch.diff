@@ -1,44 +1,12 @@
+diff --git a/dpdk b/dpdk
+index 4fe04845e..2e2390492 160000
+--- a/dpdk
++++ b/dpdk
+@@ -1 +1 @@
+-Subproject commit 4fe04845e51a77dedc32fa9e378af6b35cafaceb
++Subproject commit 2e2390492155e15f506ca4b3e4456c7e53ed1f68
 diff --git a/module/bdev/aio/bdev_aio.c b/module/bdev/aio/bdev_aio.c
-index 0b04cf052..fdc1697ea 100644
---- a/module/bdev/aio/bdev_aio.c
-+++ b/module/bdev/aio/bdev_aio.c
-@@ -128,7 +128,7 @@ bdev_aio_open(struct file_disk *disk)
- {
-        int fd;
-
--       fd = open(disk->filename, O_RDWR | O_DIRECT);
-+       fd = open(disk->filename, O_RDWR);
-        if (fd < 0) {
-                /* Try without O_DIRECT for non-disk files */
-                fd = open(disk->filename, O_RDWR);
-diff --git a/scripts/pkgdep/debian.sh b/scripts/pkgdep/debian.sh
-index 7c7ba8ccf..c1bf36e2f 100755
---- a/scripts/pkgdep/debian.sh
-+++ b/scripts/pkgdep/debian.sh
-@@ -4,7 +4,7 @@ VERSION_ID_NUM=$(sed 's/\.//g' <<< $VERSION_ID)
- # Includes Ubuntu, Debian
- # Minimal install
- apt-get install -y gcc g++ make cmake libcunit1-dev libaio-dev libssl-dev libjson-c-dev libcmocka-dev \
--       uuid-dev libiscsi-dev python libncurses5-dev libncursesw5-dev python3-pip
-+       uuid-dev libiscsi-dev python3 libncurses5-dev libncursesw5-dev python3-pip
- pip3 install ninja
- if ! pip3 install meson; then
-        # After recent updates pip3 on ubuntu1604 provides meson version which requires python >= 3.6.
-diff --git a/module/bdev/uring/bdev_uring.c b/module/bdev/uring/bdev_uring.c
-index 51fab6384..89dab6605 100644
---- a/module/bdev/uring/bdev_uring.c
-+++ b/module/bdev/uring/bdev_uring.c
-@@ -100,7 +100,7 @@ bdev_uring_open(struct bdev_uring *bdev)
- {
-        int fd;
-
--       fd = open(bdev->filename, O_RDWR | O_DIRECT | O_NOATIME);
-+       fd = open(bdev->filename, O_RDWR | O_NOATIME);
-        if (fd < 0) {
-                /* Try without O_DIRECT for non-disk files */
-                fd = open(bdev->filename, O_RDWR | O_NOATIME);
-diff --git a/module/bdev/aio/bdev_aio.c b/module/bdev/aio/bdev_aio.c
-index 0b04cf052..2cd58cf86 100644
+index 0b04cf052..e161a7df3 100644
 --- a/module/bdev/aio/bdev_aio.c
 +++ b/module/bdev/aio/bdev_aio.c
 @@ -51,6 +51,8 @@
@@ -50,31 +18,36 @@ index 0b04cf052..2cd58cf86 100644
  
  struct bdev_aio_io_channel {
  	uint64_t				io_inflight;
-@@ -244,6 +246,23 @@ bdev_aio_flush(struct file_disk *fdisk, struct bdev_aio_task *aio_task)
+@@ -128,7 +130,7 @@ bdev_aio_open(struct file_disk *disk)
+ {
+ 	int fd;
+ 
+-	fd = open(disk->filename, O_RDWR | O_DIRECT);
++	fd = open(disk->filename, O_RDWR);
+ 	if (fd < 0) {
+ 		/* Try without O_DIRECT for non-disk files */
+ 		fd = open(disk->filename, O_RDWR);
+@@ -244,6 +246,19 @@ bdev_aio_flush(struct file_disk *fdisk, struct bdev_aio_task *aio_task)
  	}
  }
  
 +static void bdev_aio_unmap(struct file_disk *fdisk, struct bdev_aio_task *aio_task,
-+		  uint64_t offset,
-+		  uint64_t byte_count)
++		uint64_t offset,
++		uint64_t byte_count)
 +{
 +	int rc = fallocate(fdisk->fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, offset, byte_count);
 +
 +	if (rc == 0) {
 +		spdk_bdev_io_complete(spdk_bdev_io_from_ctx(aio_task), SPDK_BDEV_IO_STATUS_SUCCESS);
-+		SPDK_INFOLOG(aio, "UNMAP: fallocate(%d, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, %lu, %lu) succeeded\n",
-+			     fdisk->fd, offset, byte_count);
 +	} else {
 +		spdk_bdev_io_complete_aio_status(spdk_bdev_io_from_ctx(aio_task), -errno);
-+		SPDK_ERRLOG("UNMAP: fallocate(%d, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, %lu, %lu) failed\n",
-+			     fdisk->fd, offset, byte_count);
 +	}
 +}
 +
  static void
  bdev_aio_destruct_cb(void *io_device)
  {
-@@ -500,6 +519,8 @@ bdev_aio_get_buf_cb(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io,
+@@ -500,6 +515,8 @@ bdev_aio_get_buf_cb(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io,
  
  static int _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io)
  {
@@ -83,7 +56,7 @@ index 0b04cf052..2cd58cf86 100644
  	switch (bdev_io->type) {
  	/* Read and write operations must be performed on buffers aligned to
  	 * bdev->required_alignment. If user specified unaligned buffers,
-@@ -513,7 +534,13 @@ static int _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev
+@@ -513,7 +530,13 @@ static int _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev
  		bdev_aio_flush((struct file_disk *)bdev_io->bdev->ctxt,
  			       (struct bdev_aio_task *)bdev_io->driver_ctx);
  		return 0;
@@ -91,14 +64,14 @@ index 0b04cf052..2cd58cf86 100644
 +	case SPDK_BDEV_IO_TYPE_WRITE_ZEROES:
 +	case SPDK_BDEV_IO_TYPE_UNMAP:
 +		bdev_aio_unmap((struct file_disk *)bdev_io->bdev->ctxt,
-+					 (struct bdev_aio_task *)bdev_io->driver_ctx,
-+					 bdev_io->u.bdev.offset_blocks * block_size,
-+					 bdev_io->u.bdev.num_blocks * block_size);
++					(struct bdev_aio_task *)bdev_io->driver_ctx,
++					bdev_io->u.bdev.offset_blocks * block_size,
++					bdev_io->u.bdev.num_blocks * block_size);
 +		return 0;
  	case SPDK_BDEV_IO_TYPE_RESET:
  		bdev_aio_reset((struct file_disk *)bdev_io->bdev->ctxt,
  			       (struct bdev_aio_task *)bdev_io->driver_ctx);
-@@ -538,6 +565,8 @@ bdev_aio_io_type_supported(void *ctx, enum spdk_bdev_io_type io_type)
+@@ -538,6 +561,8 @@ bdev_aio_io_type_supported(void *ctx, enum spdk_bdev_io_type io_type)
  	case SPDK_BDEV_IO_TYPE_WRITE:
  	case SPDK_BDEV_IO_TYPE_FLUSH:
  	case SPDK_BDEV_IO_TYPE_RESET:
@@ -107,3 +80,29 @@ index 0b04cf052..2cd58cf86 100644
  		return true;
  
  	default:
+diff --git a/module/bdev/uring/bdev_uring.c b/module/bdev/uring/bdev_uring.c
+index 51fab6384..89dab6605 100644
+--- a/module/bdev/uring/bdev_uring.c
++++ b/module/bdev/uring/bdev_uring.c
+@@ -100,7 +100,7 @@ bdev_uring_open(struct bdev_uring *bdev)
+ {
+ 	int fd;
+ 
+-	fd = open(bdev->filename, O_RDWR | O_DIRECT | O_NOATIME);
++	fd = open(bdev->filename, O_RDWR | O_NOATIME);
+ 	if (fd < 0) {
+ 		/* Try without O_DIRECT for non-disk files */
+ 		fd = open(bdev->filename, O_RDWR | O_NOATIME);
+diff --git a/scripts/pkgdep/debian.sh b/scripts/pkgdep/debian.sh
+index 7c7ba8ccf..01fb6b06d 100755
+--- a/scripts/pkgdep/debian.sh
++++ b/scripts/pkgdep/debian.sh
+@@ -4,7 +4,7 @@ VERSION_ID_NUM=$(sed 's/\.//g' <<< $VERSION_ID)
+ # Includes Ubuntu, Debian
+ # Minimal install
+ apt-get install -y gcc g++ make cmake libcunit1-dev libaio-dev libssl-dev libjson-c-dev libcmocka-dev \
+-	uuid-dev libiscsi-dev python libncurses5-dev libncursesw5-dev python3-pip
++    uuid-dev libiscsi-dev python3 libncurses5-dev libncursesw5-dev python3-pip
+ pip3 install ninja
+ if ! pip3 install meson; then
+ 	# After recent updates pip3 on ubuntu1604 provides meson version which requires python >= 3.6.
