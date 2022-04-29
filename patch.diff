@@ -54,7 +54,7 @@ index 0b04cf052..2cd58cf86 100644
  	}
  }
  
-+static int bdev_aio_unmap(struct file_disk *fdisk, struct bdev_aio_task *aio_task,
++static void bdev_aio_unmap(struct file_disk *fdisk, struct bdev_aio_task *aio_task,
 +		  uint64_t offset,
 +		  uint64_t byte_count)
 +{
