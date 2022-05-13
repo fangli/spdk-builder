@@ -9,7 +9,7 @@ on:
 jobs:
   tagged-release:
     name: "Tagged Release"
-    runs-on: "ubuntu-22.04"
+    runs-on: "debian-11"
 
     steps:
       - name: "Reset permissions"
@@ -37,7 +37,7 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           title: "Release NVMe-oF Target ${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}-${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
-          automatic_release_tag: "v${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}-${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}"
+          automatic_release_tag: "v${{ env.SPDK_VERSION_MAJOR }}.${{ env.SPDK_VERSION_MINOR }}.${{ env.SPDK_VERSION_PATCH }}-${{ env.SPDK_VERSION_UNIXTIME }}v${{ env.SPDK_VERSION_HASH }}-debian"
           prerelease: false
           files: |
             *.deb
