@@ -1,10 +1,3 @@
-diff --git a/dpdk b/dpdk
-index 4fe04845e..2e2390492 160000
---- a/dpdk
-+++ b/dpdk
-@@ -1 +1 @@
--Subproject commit 4fe04845e51a77dedc32fa9e378af6b35cafaceb
-+Subproject commit 2e2390492155e15f506ca4b3e4456c7e53ed1f68
 diff --git a/module/bdev/aio/bdev_aio.c b/module/bdev/aio/bdev_aio.c
 index 0b04cf052..e161a7df3 100644
 --- a/module/bdev/aio/bdev_aio.c
@@ -100,7 +93,7 @@ index 7c7ba8ccf..01fb6b06d 100755
 @@ -4,7 +4,7 @@ VERSION_ID_NUM=$(sed 's/\.//g' <<< $VERSION_ID)
  # Includes Ubuntu, Debian
  # Minimal install
- apt-get install -y gcc g++ make cmake libcunit1-dev libaio-dev libssl-dev libjson-c-dev libcmocka-dev \
+ apt-get install -y gcc g++ make libcunit1-dev libaio-dev libssl-dev libjson-c-dev libcmocka-dev \
 -	uuid-dev libiscsi-dev python libncurses5-dev libncursesw5-dev python3-pip
 +    uuid-dev libiscsi-dev python3 libncurses5-dev libncursesw5-dev python3-pip
  pip3 install ninja
