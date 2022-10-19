@@ -1,8 +1,8 @@
 diff --git a/module/bdev/aio/bdev_aio.c b/module/bdev/aio/bdev_aio.c
-index 0b04cf052..e161a7df3 100644
+index 52bdbb373..955f98e9c 100644
 --- a/module/bdev/aio/bdev_aio.c
 +++ b/module/bdev/aio/bdev_aio.c
-@@ -51,6 +51,8 @@
+@@ -23,6 +23,8 @@
  
  #include <sys/eventfd.h>
  #include <libaio.h>
@@ -11,7 +11,7 @@ index 0b04cf052..e161a7df3 100644
  
  struct bdev_aio_io_channel {
  	uint64_t				io_inflight;
-@@ -128,7 +130,7 @@ bdev_aio_open(struct file_disk *disk)
+@@ -100,7 +102,7 @@ bdev_aio_open(struct file_disk *disk)
  {
  	int fd;
  
@@ -20,7 +20,7 @@ index 0b04cf052..e161a7df3 100644
  	if (fd < 0) {
  		/* Try without O_DIRECT for non-disk files */
  		fd = open(disk->filename, O_RDWR);
-@@ -244,6 +246,19 @@ bdev_aio_flush(struct file_disk *fdisk, struct bdev_aio_task *aio_task)
+@@ -216,6 +218,19 @@ bdev_aio_flush(struct file_disk *fdisk, struct bdev_aio_task *aio_task)
  	}
  }
  
@@ -40,16 +40,16 @@ index 0b04cf052..e161a7df3 100644
  static void
  bdev_aio_destruct_cb(void *io_device)
  {
-@@ -500,6 +515,8 @@ bdev_aio_get_buf_cb(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io,
- 
- static int _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io)
+@@ -474,6 +489,8 @@ bdev_aio_get_buf_cb(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io,
+ static int
+ _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_io)
  {
 +	uint32_t block_size = bdev_io->bdev->blocklen;
 +
  	switch (bdev_io->type) {
  	/* Read and write operations must be performed on buffers aligned to
  	 * bdev->required_alignment. If user specified unaligned buffers,
-@@ -513,7 +530,13 @@ static int _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev
+@@ -487,7 +504,13 @@ _bdev_aio_submit_request(struct spdk_io_channel *ch, struct spdk_bdev_io *bdev_i
  		bdev_aio_flush((struct file_disk *)bdev_io->bdev->ctxt,
  			       (struct bdev_aio_task *)bdev_io->driver_ctx);
  		return 0;
@@ -64,38 +64,12 @@ index 0b04cf052..e161a7df3 100644
  	case SPDK_BDEV_IO_TYPE_RESET:
  		bdev_aio_reset((struct file_disk *)bdev_io->bdev->ctxt,
  			       (struct bdev_aio_task *)bdev_io->driver_ctx);
-@@ -538,6 +561,8 @@ bdev_aio_io_type_supported(void *ctx, enum spdk_bdev_io_type io_type)
+@@ -512,6 +535,8 @@ bdev_aio_io_type_supported(void *ctx, enum spdk_bdev_io_type io_type)
+ 	case SPDK_BDEV_IO_TYPE_READ:
  	case SPDK_BDEV_IO_TYPE_WRITE:
  	case SPDK_BDEV_IO_TYPE_FLUSH:
- 	case SPDK_BDEV_IO_TYPE_RESET:
 +	case SPDK_BDEV_IO_TYPE_UNMAP:
 +	case SPDK_BDEV_IO_TYPE_WRITE_ZEROES:
+ 	case SPDK_BDEV_IO_TYPE_RESET:
  		return true;
  
- 	default:
-diff --git a/module/bdev/uring/bdev_uring.c b/module/bdev/uring/bdev_uring.c
-index 51fab6384..89dab6605 100644
---- a/module/bdev/uring/bdev_uring.c
-+++ b/module/bdev/uring/bdev_uring.c
-@@ -100,7 +100,7 @@ bdev_uring_open(struct bdev_uring *bdev)
- {
- 	int fd;
- 
--	fd = open(bdev->filename, O_RDWR | O_DIRECT | O_NOATIME);
-+	fd = open(bdev->filename, O_RDWR | O_NOATIME);
- 	if (fd < 0) {
- 		/* Try without O_DIRECT for non-disk files */
- 		fd = open(bdev->filename, O_RDWR | O_NOATIME);
-diff --git a/scripts/pkgdep/debian.sh b/scripts/pkgdep/debian.sh
-index 7c7ba8ccf..01fb6b06d 100755
---- a/scripts/pkgdep/debian.sh
-+++ b/scripts/pkgdep/debian.sh
-@@ -4,7 +4,7 @@ VERSION_ID_NUM=$(sed 's/\.//g' <<< $VERSION_ID)
- # Includes Ubuntu, Debian
- # Minimal install
- apt-get install -y gcc g++ make libcunit1-dev libaio-dev libssl-dev libjson-c-dev libcmocka-dev \
--	uuid-dev libiscsi-dev python libncurses5-dev libncursesw5-dev python3-pip
-+    uuid-dev libiscsi-dev python3 libncurses5-dev libncursesw5-dev python3-pip
- pip3 install ninja
- if ! pip3 install meson; then
- 	# After recent updates pip3 on ubuntu1604 provides meson version which requires python >= 3.6.
