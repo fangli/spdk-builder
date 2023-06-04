@@ -2,14 +2,12 @@
 
 cd spdk
 
-git apply --ignore-space-change --ignore-whitespace ../patch.diff
-
 # Build SPDK
 
-sudo -E ./scripts/pkgdep.sh --rdma
+sudo -E ./scripts/pkgdep.sh --rdma --uring --fuse
 
 make clean || true
-./configure --with-rdma --enable-lto --disable-tests --disable-unit-tests --disable-examples
+./configure --with-rdma --with-uring --without-uring-zns --enable-lto --disable-tests --disable-unit-tests --disable-examples
 make -j4
 
 cd ..

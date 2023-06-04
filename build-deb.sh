@@ -11,10 +11,13 @@ sudo apt install -y dpkg
 
 mkdir -p deb-package/usr/local/bin
 mkdir -p deb-package/usr/local/lib/nvmfcli/scripts
+mkdir -p deb-package/usr/lib64
 
 mv spdk/build/bin/nvmf_tgt deb-package/usr/local/bin/nvmf
 cp -rf spdk/scripts/rpc.py deb-package/usr/local/lib/nvmfcli/scripts/
 cp -rf spdk/python deb-package/usr/local/lib/nvmfcli/
+cp -rf /usr/lib64/liburing.so.2 deb-package/usr/lib64
+cp -rf /usr/lib64/liburing.so.2.2 deb-package/usr/lib64
 
 cd deb-package/
 
