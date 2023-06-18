@@ -4,7 +4,7 @@ cd spdk
 
 # Build SPDK
 
-sudo -E ./scripts/pkgdep.sh --rdma --uring --fuse
+sudo -E ./scripts/pkgdep.sh --rdma --uring
 
 make clean || true
 ./configure --with-rdma --with-uring --without-uring-zns --enable-lto --disable-tests --disable-unit-tests --disable-examples
