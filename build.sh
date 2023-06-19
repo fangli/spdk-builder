@@ -2,7 +2,7 @@
 
 cd spdk
 
-git apply --ignore-space-change --ignore-whitespace ../patch.diff
+# git apply --ignore-space-change --ignore-whitespace ../patch.diff
 
 # Build SPDK
 
