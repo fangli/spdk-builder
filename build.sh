@@ -2,6 +2,8 @@
 
 cd spdk
 
+git apply --ignore-space-change --ignore-whitespace ../patch.diff
+
 # Build SPDK
 
 sudo -E ./scripts/pkgdep.sh --rdma --uring
